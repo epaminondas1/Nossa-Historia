@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nossa História de Amor ❤️</title>
     <style>
         :root {
@@ -22,6 +22,7 @@
             text-align: center;
             overflow-x: hidden;
             position: relative;
+            box-sizing: border-box;
         }
 
         header {
@@ -32,6 +33,7 @@
             border-bottom-left-radius: 50px;
             border-bottom-right-radius: 50px;
             position: relative;
+            box-sizing: border-box;
         }
 
         header h1 {
@@ -49,42 +51,50 @@
 
         .container {
             max-width: 850px;
+            width: 90%;
             margin: -30px auto 50px auto;
-            padding: 40px 30px;
+            padding: 40px 20px;
             background: var(--cor-card);
             border-radius: 30px;
             box-shadow: 0 15px 35px rgba(89, 13, 34, 0.1);
             position: relative;
             z-index: 10;
+            box-sizing: border-box;
         }
 
         h2 { font-size: 1.8em; color: var(--cor-primaria); margin-top: 40px; margin-bottom: 20px; position: relative; display: inline-block; }
         h2::after { content: '❤️'; font-size: 0.6em; position: absolute; right: -25px; top: 5px; }
         p { font-size: 1.15em; line-height: 1.8; color: #4a4a4a; margin-bottom: 25px; }
 
-        .contador-box { background: linear-gradient(135deg, #ffe5ec, #ffc2d1); padding: 25px; border-radius: 20px; margin: 30px 0; border: 2px dashed var(--cor-secundaria); }
-        #cronometro { font-size: 1.5em; font-weight: bold; color: var(--cor-texto); letter-spacing: 1px; }
+        .contador-box { background: linear-gradient(135deg, #ffe5ec, #ffc2d1); padding: 20px; border-radius: 20px; margin: 30px 0; border: 2px dashed var(--cor-secundaria); box-sizing: border-box;}
+        #cronometro { font-size: 1.4em; font-weight: bold; color: var(--cor-texto); letter-spacing: 1px; word-wrap: break-word;}
 
-        .media-section { background-color: #fffcfc; padding: 20px; border-radius: 20px; margin-bottom: 40px; box-shadow: inset 0 0 10px rgba(0,0,0,0.02); }
+        .media-section { background-color: #fffcfc; padding: 20px; border-radius: 20px; margin-bottom: 40px; box-shadow: inset 0 0 10px rgba(0,0,0,0.02); box-sizing: border-box;}
         .gallery { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .gallery img { width: 300px; height: 400px; object-fit: cover; border-radius: 20px; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .gallery img { max-width: 100%; width: 300px; height: auto; object-fit: cover; border-radius: 20px; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
 
-        img, video { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 20px; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: all 0.4s ease; }
+        img, video { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 20px; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: all 0.4s ease; box-sizing: border-box;}
         img:hover, video:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 15px 30px rgba(255, 77, 109, 0.3); }
 
-        .btn-surpresa { background-color: var(--cor-primaria); color: white; border: none; padding: 15px 35px; font-size: 1.2em; font-weight: bold; border-radius: 50px; cursor: pointer; margin: 30px 0; }
-        .mensagem-oculta { display: none; background-color: #fff0f3; padding: 25px; border-radius: 20px; border-left: 5px solid var(--cor-primaria); margin-top: 20px; }
+        .btn-surpresa { background-color: var(--cor-primaria); color: white; border: none; padding: 15px 35px; font-size: 1.2em; font-weight: bold; border-radius: 50px; cursor: pointer; margin: 30px 0; max-width: 100%; white-space: normal;}
+        .mensagem-oculta { display: none; background-color: #fff0f3; padding: 25px; border-radius: 20px; border-left: 5px solid var(--cor-primaria); margin-top: 20px; box-sizing: border-box;}
         
         .coracao-flutuante { position: fixed; bottom: -50px; color: rgba(255, 77, 109, 0.6); pointer-events: none; z-index: 1; animation: subir 4s linear infinite; }
         @keyframes subir { 100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; } }
-        footer { margin-top: 50px; padding: 40px; color: white; background: linear-gradient(135deg, var(--cor-secundaria), var(--cor-primaria)); border-top-left-radius: 50px; border-top-right-radius: 50px; }
+        footer { margin-top: 50px; padding: 40px 20px; color: white; background: linear-gradient(135deg, var(--cor-secundaria), var(--cor-primaria)); border-top-left-radius: 50px; border-top-right-radius: 50px; box-sizing: border-box; word-wrap: break-word;}
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 2.2em; }
+            #overlay h1 { font-size: 1.8em; }
+            #overlay button { font-size: 1em !important; padding: 15px 20px !important; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center;">
-        <h1>Bem-vinda, meu amor ❤️</h1>
-        <button onclick="iniciarTudo()" style="padding: 20px 40px; font-size: 1.5em; background: #ff4d6d; color: white; border: none; border-radius: 50px; cursor: pointer;">
+    <div id="overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.98); z-index:9999; display:flex; flex-direction:column; justify-content:center; align-items:center; padding: 20px; box-sizing: border-box; text-align: center;">
+        <h1 style="margin-bottom: 20px;">Bem-vinda, meu amor ❤️</h1>
+        <button onclick="iniciarTudo()" style="padding: 20px 40px; font-size: 1.3em; background: #ff4d6d; color: white; border: none; border-radius: 50px; cursor: pointer; max-width: 100%; white-space: normal;">
             Clique aqui para ver a nossa história 💌
         </button>
     </div>
@@ -125,7 +135,7 @@
         <h2>A Dona do Meu Coração</h2>
         <p>Minha anêmica, cada segundo com você é um presente precioso. O seu sorriso ilumina qualquer dia cinzento, o teu abraço é o meu lugar favorito no mundo inteiro. Sou o homem mais sortudo por te ter na minha vida. Eu te amo daqui até ao infinito! ❤️</p>
         
-        <img src="WhatsApp Image 2026-06-05 at 14.00.05.jpeg" alt="A mulher da minha vida" style="max-width: 420px; margin: 0 auto 30px auto; display: block;">
+        <img src="WhatsApp Image 2026-06-05 at 14.00.05.jpeg" alt="A mulher da minha vida" style="max-width: 100%; margin: 0 auto 30px auto; display: block;">
 
         <button class="btn-surpresa" onclick="revelarSurpresa()">Clica aqui para uma surpresa 💌</button>
         
@@ -150,7 +160,7 @@
             const audio = document.getElementById('musica');
             
             // Forçamos o volume aqui
-            audio.volume = 0.010; 
+            audio.volume = 0.030; 
             
             // Adicionamos esta linha para garantir que o navegador atualize o volume
             audio.muted = false; 
@@ -189,7 +199,11 @@
 
         function revelarSurpresa() {
             const msg = document.getElementById('mensagem-secreta');
-            msg.style.display = (msg.style.display === 'block') ? 'none' : 'block';
+            if (msg.style.display === 'none' || msg.style.display === '') {
+                msg.style.display = 'block';
+            } else {
+                msg.style.display = 'none';
+            }
         }
     </script>
 </body>
