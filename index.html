@@ -76,7 +76,8 @@
         img, video { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 20px; border: 4px solid white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: all 0.4s ease; box-sizing: border-box;}
         img:hover, video:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 15px 30px rgba(255, 77, 109, 0.3); }
 
-        .btn-surpresa { background-color: var(--cor-primaria); color: white; border: none; padding: 15px 35px; font-size: 1.2em; font-weight: bold; border-radius: 50px; cursor: pointer; margin: 30px 0; max-width: 100%; white-space: normal;}
+        .btn-surpresa { background-color: var(--cor-primaria); color: white; border: none; padding: 15px 35px; font-size: 1.2em; font-weight: bold; border-radius: 50px; cursor: pointer; margin: 15px 0; max-width: 100%; white-space: normal; box-shadow: 0 5px 15px rgba(255,77,109,0.4); transition: transform 0.2s;}
+        .btn-surpresa:active { transform: scale(0.95); }
         .mensagem-oculta { display: none; background-color: #fff0f3; padding: 25px; border-radius: 20px; border-left: 5px solid var(--cor-primaria); margin-top: 20px; box-sizing: border-box;}
         
         .coracao-flutuante { position: fixed; bottom: -50px; color: rgba(255, 77, 109, 0.6); pointer-events: none; z-index: 1; animation: subir 4s linear infinite; }
@@ -88,6 +89,26 @@
             #overlay h1 { font-size: 1.8em; }
             #overlay button { font-size: 1em !important; padding: 15px 20px !important; }
         }
+
+        /* ==== ESTILOS DOS JOGOS E MODAL ==== */
+        .modal { display: none; position: fixed; top:0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px); }
+        .modal-content { background: white; padding: 30px 20px; border-radius: 30px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; text-align: center; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .btn-fechar { position: absolute; top: 15px; right: 20px; font-size: 1.8em; cursor: pointer; color: #ff4d6d; background: none; border: none; font-weight: bold; }
+        
+        .btn-menu-jogo { display: block; width: 100%; padding: 18px; margin: 15px 0; font-size: 1.2em; background: linear-gradient(135deg, #ff758f, #ff4d6d); color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 10px rgba(255,77,109,0.3); transition: transform 0.2s;}
+        .btn-menu-jogo:active { transform: scale(0.95); }
+        .btn-voltar { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #ddd; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; color: #333; }
+
+        /* Estilo Quebra-Cabeça */
+        .puzzle-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; width: 100%; max-width: 300px; margin: 20px auto; background: #fff; padding: 5px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .puzzle-piece { width: 100%; aspect-ratio: 1; background-image: url('WhatsApp Image 2026-06-11 at 17.36.17.jpeg'); background-size: 300% 300%; cursor: pointer; border-radius: 5px; box-sizing: border-box; border: 2px solid transparent; transition: transform 0.1s; }
+        .puzzle-piece.selected { border: 3px solid #ff4d6d; transform: scale(0.92); }
+
+        /* Estilo Jogo da Memória */
+        .memory-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px;}
+        .memory-card { width: 100%; aspect-ratio: 1; background: var(--cor-primaria); border-radius: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; background-size: cover; background-position: center; transition: transform 0.3s; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .memory-card.hidden { background-image: none !important; background-color: #ffb3c1; }
+        .memory-card.hidden::after { content: '❤️'; font-size: 2.5em; color: white; }
     </style>
 </head>
 <body>
@@ -141,8 +162,12 @@
         
         <div id="mensagem-secreta" class="mensagem-oculta">
             <h3>Tenho um segredo para você... 🤫</h3>
-            <p>Se leste até aqui, lembra-te: és o amor da minha vida hoje, amanhã e para sempre. Obrigado por seres exatamente quem és! 💖</p>
+            <p>Se leu até aqui, lembre se: você é o amor da minha vida hoje, amanhã e para sempre. Obrigado por ser exatamente quem é! 💖</p>
         </div>
+
+        <br><br>
+        <button class="btn-surpresa" style="background: linear-gradient(135deg, #8338ec, #ff006e); padding: 20px 40px; font-size: 1.4em; width: 100%;" onclick="abrirModalJogos()">Nossos Joguinhos 🎮</button>
+
     </div>
 
     <footer>
@@ -153,18 +178,54 @@
         <source src="musica.mp3" type="audio/mpeg">
     </audio>
 
+    <div id="modal-jogos" class="modal">
+        <div class="modal-content">
+            <button class="btn-fechar" onclick="fecharModalJogos()">×</button>
+            <h2 id="titulo-modal">Caixinha de Surpresas 🎁</h2>
+            <p style="font-size: 0.9em; color: #777;">(Especialmente pra você)</p>
+
+            <div id="menu-lista">
+                <button class="btn-menu-jogo" onclick="abrirJogo('jogo-puzzle', 'Nosso Quebra-Cabeça 🧩')">🧩 Montar Nossa Foto</button>
+                <button class="btn-menu-jogo" onclick="abrirJogo('jogo-memoria', 'Jogo da Memória 🃏')">🃏 Achando Nossos Momentos</button>
+                <button class="btn-menu-jogo" onclick="abrirJogo('jogo-quiz', 'Quiz do Casal ❓')">❓ O Quanto Você Sabe?</button>
+                <button class="btn-menu-jogo" onclick="abrirJogo('jogo-dose', 'Dose de Amor 💊')">💊 Sua Dose Diária de Amor</button>
+            </div>
+
+            <div id="jogo-puzzle" style="display:none;">
+                <p>Toque em uma peça e depois em outra para trocar de lugar!</p>
+                <div id="puzzle-board" class="puzzle-board"></div>
+                <button class="btn-voltar" onclick="voltarAoMenu()">Voltar ao Menu</button>
+            </div>
+
+            <div id="jogo-memoria" style="display:none;">
+                <p>Encontre os pares das nossas fotinhas!</p>
+                <div id="memoria-board" class="memory-board"></div>
+                <button class="btn-voltar" onclick="voltarAoMenu()">Voltar ao Menu</button>
+            </div>
+
+            <div id="jogo-quiz" style="display:none;">
+                <div id="quiz-container"></div>
+                <button class="btn-voltar" onclick="voltarAoMenu()">Voltar ao Menu</button>
+            </div>
+
+            <div id="jogo-dose" style="display:none;">
+                <div style="background: #fff0f3; padding: 30px 20px; border-radius: 20px; margin: 20px 0; border: 2px dashed #ff4d6d;">
+                    <p id="texto-dose" style="font-size: 1.4em; font-style: italic; color: #590d22; font-weight: bold; min-height: 100px; display: flex; align-items: center; justify-content: center;">Clique no botão abaixo para receber sua dose de hoje!</p>
+                </div>
+                <button class="btn-menu-jogo" onclick="gerarDoseAmor()">Receber Amor ❤️</button>
+                <button class="btn-voltar" onclick="voltarAoMenu()">Voltar ao Menu</button>
+            </div>
+
+        </div>
+    </div>
+
     <script>
         const dataInicio = new Date(2025, 11, 16, 20, 0, 0); 
 
         function iniciarTudo() {
             const audio = document.getElementById('musica');
-            
-            // Forçamos o volume aqui
             audio.volume = 0.030; 
-            
-            // Adicionamos esta linha para garantir que o navegador atualize o volume
             audio.muted = false; 
-            
             audio.play();
             document.getElementById('overlay').style.display = 'none';
         }
@@ -194,16 +255,182 @@
             document.getElementById('fundo-coracoes').appendChild(coracao);
             setTimeout(() => coracao.remove(), 6000);
         }
-
         setInterval(criarCoracao, 400);
 
         function revelarSurpresa() {
             const msg = document.getElementById('mensagem-secreta');
-            if (msg.style.display === 'none' || msg.style.display === '') {
-                msg.style.display = 'block';
+            msg.style.display = (msg.style.display === 'none' || msg.style.display === '') ? 'block' : 'none';
+        }
+
+        /* ================= LÓGICA DOS JOGOS ================= */
+
+        // Controle do Modal
+        function abrirModalJogos() {
+            document.getElementById('modal-jogos').style.display = 'flex';
+            voltarAoMenu();
+        }
+        function fecharModalJogos() {
+            document.getElementById('modal-jogos').style.display = 'none';
+        }
+        function voltarAoMenu() {
+            document.getElementById('menu-lista').style.display = 'block';
+            ['jogo-puzzle', 'jogo-memoria', 'jogo-quiz', 'jogo-dose'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            document.getElementById('titulo-modal').innerText = 'Caixinha de Surpresas 🎁';
+        }
+        function abrirJogo(id, titulo) {
+            document.getElementById('menu-lista').style.display = 'none';
+            document.getElementById(id).style.display = 'block';
+            document.getElementById('titulo-modal').innerText = titulo;
+            
+            if(id === 'jogo-puzzle') iniciarPuzzle();
+            if(id === 'jogo-memoria') iniciarMemoria();
+            if(id === 'jogo-quiz') iniciarQuiz();
+        }
+
+        // 1. Quebra-Cabeça (Troca de Peças)
+        let puzzleOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        let selectedPuzzle = null;
+        function iniciarPuzzle() {
+            puzzleOrder.sort(() => Math.random() - 0.5); // Embaralha
+            selectedPuzzle = null;
+            renderizarPuzzle();
+        }
+        function renderizarPuzzle() {
+            const board = document.getElementById('puzzle-board');
+            board.innerHTML = '';
+            // Posições exatas de fundo para uma grid 3x3 com background-size 300%
+            const posicoes = ['0% 0%', '50% 0%', '100% 0%', '0% 50%', '50% 50%', '100% 50%', '0% 100%', '50% 100%', '100% 100%'];
+            
+            puzzleOrder.forEach((val, index) => {
+                let div = document.createElement('div');
+                div.className = 'puzzle-piece';
+                div.style.backgroundPosition = posicoes[val];
+                if(selectedPuzzle === index) div.classList.add('selected');
+                div.onclick = () => clicarPuzzle(index);
+                board.appendChild(div);
+            });
+        }
+        function clicarPuzzle(index) {
+            if(selectedPuzzle === null) {
+                selectedPuzzle = index; // Seleciona a primeira peça
             } else {
-                msg.style.display = 'none';
+                // Troca a peça selecionada com a nova que clicou
+                let temp = puzzleOrder[selectedPuzzle];
+                puzzleOrder[selectedPuzzle] = puzzleOrder[index];
+                puzzleOrder[index] = temp;
+                selectedPuzzle = null;
+                
+                // Checa vitória (se [0,1,2...8] estiver em ordem)
+                if(puzzleOrder.every((v, i) => v === i)) {
+                    setTimeout(() => alert('Parabéns, minha linda! Você montou a nossa foto! Te amo muito! ❤️🐶'), 300);
+                }
             }
+            renderizarPuzzle();
+        }
+
+        // 2. Jogo da Memória
+        const imgsMemoria = [
+            'WhatsApp Image 2026-06-11 at 17.36.17 (1).jpeg', // Foto da orelha/beijo
+            'WhatsApp Image 2026-06-05 at 14.00.01.jpeg',     // Foto casal
+            'WhatsApp Image 2026-06-05 at 14.00.02.jpeg'       // Foto casal
+        ];
+        let cartasMemoria = [];
+        let viradas = [];
+        let paresEncontrados = 0;
+
+        function iniciarMemoria() {
+            // Duplica as fotos e embaralha (6 cartas no total)
+            cartasMemoria = [...imgsMemoria, ...imgsMemoria].sort(() => Math.random() - 0.5);
+            viradas = [];
+            paresEncontrados = 0;
+            const board = document.getElementById('memoria-board');
+            board.innerHTML = '';
+            
+            cartasMemoria.forEach((img, index) => {
+                let div = document.createElement('div');
+                div.className = 'memory-card hidden';
+                div.dataset.img = img;
+                div.onclick = () => virarCarta(div);
+                board.appendChild(div);
+            });
+        }
+        function virarCarta(carta) {
+            if(viradas.length < 2 && carta.classList.contains('hidden') && !viradas.includes(carta)) {
+                carta.classList.remove('hidden');
+                carta.style.backgroundImage = `url('${carta.dataset.img}')`;
+                viradas.push(carta);
+                
+                if(viradas.length === 2) {
+                    setTimeout(verificarPar, 800);
+                }
+            }
+        }
+        function verificarPar() {
+            if(viradas[0].dataset.img === viradas[1].dataset.img) {
+                paresEncontrados++;
+                if(paresEncontrados === 3) {
+                    setTimeout(() => alert('Você achou todos os nossos momentos! É por isso que combinamos tanto! 😍'), 300);
+                }
+            } else {
+                viradas[0].classList.add('hidden');
+                viradas[0].style.backgroundImage = 'none';
+                viradas[1].classList.add('hidden');
+                viradas[1].style.backgroundImage = 'none';
+            }
+            viradas = [];
+        }
+
+        // 3. Quiz do Casal
+        let perguntaAtual = 0;
+        const perguntasQuiz = [
+            { q: "Qual foi a primeira coisa que eu pensei quando te vi?", opcoes: ["Nossa, que linda", "Preciso falar com ela", "Quase morri e me apaixonei", "Ela é legal"], certa: 2 },
+            { q: "Qual é o apelido mais carinhoso que a gente usa?", opcoes: ["Amor", "Vida", "Anêmicos"], certa: 2 },
+            { q: "O que eu mais gosto em você?", opcoes: ["Sua bochecha", "Sua boca", "Seu sorriso", "Absolutamente TUDO"], certa: 3 },
+            { q: "Quem é o mais sortudo da relação?", opcoes: ["Eu", "Você", "Nós dois", "O cachorro"], certa: 0 }
+        ];
+
+        function iniciarQuiz() {
+            perguntaAtual = 0;
+            mostrarPergunta();
+        }
+        function mostrarPergunta() {
+            if(perguntaAtual >= perguntasQuiz.length) {
+                document.getElementById('quiz-container').innerHTML = `
+                    <h3 style="color:var(--cor-primaria); font-size: 1.5em; margin: 30px 0;">Você acertou tudo! É por isso que eu sou louco por você! ❤️</h3>
+                    <button class="btn-menu-jogo" onclick="iniciarQuiz()">Jogar de Novo</button>`;
+                return;
+            }
+            const q = perguntasQuiz[perguntaAtual];
+            let html = `<p style="font-weight: bold; font-size: 1.3em; margin-bottom: 20px;">${q.q}</p>`;
+            q.opcoes.forEach((op, i) => {
+                html += `<button class="btn-menu-jogo" style="background: #ffb3c1; color: #590d22; margin: 8px 0; padding: 15px;" onclick="responderQuiz(${i})">${op}</button>`;
+            });
+            document.getElementById('quiz-container').innerHTML = html;
+        }
+        function responderQuiz(resp) {
+            if(resp === perguntasQuiz[perguntaAtual].certa) {
+                perguntaAtual++;
+                mostrarPergunta();
+            } else {
+                alert('Errado! Tente de novo, minha anêmica lindinha! 😜');
+            }
+        }
+
+        // 4. Dose Diária de Amor
+        const frasesAmor = [
+            "Você é, e sempre vai ser, a melhor parte de todos os meus dias.",
+            "Eu amo cada detalhe seu, até as manias que você acha que são chatas.",
+            "Meu lugar favorito no mundo inteiro é dentro do seu abraço.",
+            "Sorte a minha ter cruzado o caminho com a mulher mais incrível do mundo.",
+            "Seu sorriso ilumina a minha vida de um jeito que você nem imagina.",
+            "Nunca se esqueça: eu sou completamente apaixonado por você!",
+            "Você é a minha anêmica favorita! Te amo daqui até a lua."
+        ];
+        function gerarDoseAmor() {
+            const index = Math.floor(Math.random() * frasesAmor.length);
+            document.getElementById('texto-dose').innerText = `"${frasesAmor[index]}"`;
         }
     </script>
 </body>
